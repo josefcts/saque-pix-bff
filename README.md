@@ -32,7 +32,6 @@ API Backend construída em **PHP 8.2 + Hyperf 3.x**, projetada para orquestrar *
 ```bash
 git clone git@github.com:josefcts/saque-pix-bff.git
 cd saque-pix-bff
-cp .env.example .env
 docker compose up -d --build
 ```
 
