@@ -1,0 +1,68 @@
+name: saque-pix
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: saque-pix-app
+    working_dir: /app
+    volumes:
+      - ./:/app # dev hot-reload
+    ports:
+      - "9501:9501"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pix
+      MYSQL_USER: pix
+      MYSQL_PASSWORD: pix
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+
+  # Observability
+  otel-collector:
+    image: otel/opentelemetry-collector:0.103.1
+    depends_on: [app]
+    command: ["--config=/etc/otel/otel-collector-config.yaml"]
+    # MONTAR SUBPASTA (não /etc inteiro)
+    volumes:
+      - ./ops/otel:/etc/otel:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./ops/prometheus:/etc/prometheus:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:

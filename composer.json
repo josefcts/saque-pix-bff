@@ -1,0 +1,95 @@
+{
+  "name": "jose/pix-withdraw",
+  "description": "Projeto Saque PIX – baseado no Hyperf Skeleton 3.1, com Redis, Async Queue, Crontab e MySQL.",
+  "type": "project",
+  "license": "Apache-2.0",
+  "keywords": [
+    "php",
+    "swoole",
+    "hyperf",
+    "framework",
+    "pix",
+    "withdraw",
+    "queue",
+    "microservice"
+  ],
+  "require": {
+    "php": ">=8.1",
+    "firebase/php-jwt": "^6.11",
+    "hyperf/async-queue": "^3.1",
+    "hyperf/cache": "~3.1.0",
+    "hyperf/command": "~3.1.0",
+    "hyperf/config": "~3.1.0",
+    "hyperf/crontab": "~3.1.0",
+    "hyperf/database": "^3.1",
+    "hyperf/db-connection": "~3.1.0",
+    "hyperf/engine": "^2.10",
+    "hyperf/framework": "~3.1.0",
+    "hyperf/guzzle": "~3.1.0",
+    "hyperf/http-server": "~3.1.0",
+    "hyperf/laminas-mime": "^3.0",
+    "hyperf/logger": "~3.1.0",
+    "hyperf/memory": "~3.1.0",
+    "hyperf/process": "~3.1.0",
+    "hyperf/redis": "^3.1",
+    "hyperf/validation": "*",
+    "promphp/prometheus_client_php": "^2.14",
+    "ramsey/uuid": "^4.9"
+  },
+  "require-dev": {
+    "hyperf/devtool": "~3.1.0",
+    "hyperf/testing": "~3.1.0",
+    "mockery/mockery": "^1.0",
+    "phpstan/phpstan": "^1.0",
+    "swoole/ide-helper": "^5.0",
+    "pestphp/pest": "^2.34",
+    "phpunit/phpunit": "^10.5",
+    "monolog/monolog": "^3.6"
+  },
+  "suggest": {
+    "ext-openssl": "Required to use HTTPS.",
+    "ext-json": "Required to use JSON.",
+    "ext-pdo": "Required to use MySQL Client.",
+    "ext-pdo_mysql": "Required to use MySQL Client.",
+    "ext-redis": "Required to use Redis Client."
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    "files": []
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HyperfTest\\": "./test/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "extra": [],
+  "scripts": {
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-autoload-dump": [
+      "rm -rf runtime/container"
+    ],
+    "test": "vendor/bin/pest --colors=always",
+    "analyse": "phpstan analyse --memory-limit=300M",
+    "cs-fix": "php-cs-fixer fix",
+    "start": [
+      "Composer\\Config::disableProcessTimeout",
+      "php ./bin/hyperf.php start"
+    ],
+    "migrate": "php bin/hyperf.php migrate",
+    "queue": "php bin/hyperf.php queue:consum --name=default",
+    "crontab": "php bin/hyperf.php crontab:run"
+  }
+}

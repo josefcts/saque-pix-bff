@@ -1,0 +1,43 @@
+# === PHP / Hyperf ===
+/vendor/
+/runtime/
+/storage/
+/logs/
+.env.local
+.env.backup
+
+# === Docker ===
+/docker-compose.override.yml
+/.idea/
+/.DS_Store
+/.vscode/
+/node_modules/
+/*.log
+/.phpunit.result.cache
+
+# === Cache e artefatos ===
+/coverage/
+/cache/
+/tmp/
+/composer.lock
+/phpunit.xml
+
+# === IDE / Sistema ===
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+*.bak
+*.orig
+*.tmp
+
+# === Build ===
+/public/hot
+/public/storage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Testes e relatórios ===
+/tests/_output/
+/tests/_support/_generated/
