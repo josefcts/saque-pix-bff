@@ -1,12 +1,29 @@
-# 💸 Saque Pix BFF — Hyperf 3.x (com cenários de falha + migrações/seed + métricas)
+# 💸 Saque Pix BFF — Hyperf 3.x
 
-Este README contém instruções completas para rodar o projeto via Docker, configurar o `.env`, obter um JWT token, executar **migrações e seeds**, cenários de movimentações (sucesso e falhas) com exemplos em `curl`, e como **expor/consumir métricas**. Também inclui um diagrama Mermaid do fluxo.
+API Backend construída em **PHP 8.2 + Hyperf 3.x**, projetada para orquestrar **saques via PIX**, simulando o fluxo de débito de conta, registro de saque, notificações por e-mail e autenticação JWT.
 
 ---
 
-## 🧭 Prefácio (resumo)
+## 🧭 Prefácio
 
-O projeto é um BFF para orquestrar saques via PIX, escrito em **PHP 8+ com Hyperf**, usando **Swoole**, **Redis**, **Mailhog** para testes de e-mail e **firebase/php-jwt** para tokens JWT. A escolha foca em performance, arquitetura limpa e facilidade de teste local com Docker.
+### 🧰 Tecnologias Utilizadas
+
+| Componente | Descrição |
+|-------------|------------|
+| **[Hyperf 3.x](https://hyperf.wiki/)** | Framework PHP de alta performance baseado em Swoole. |
+| **Swoole** | Extensão C para PHP que oferece IO assíncrono e servidor HTTP embutido. |
+| **Redis** | Cache e fila assíncrona para processamento de eventos (ex: e-mails). |
+| **Mailhog** | SMTP fake para visualização de e-mails locais. |
+| **Docker + Docker Compose** | Padroniza ambiente e facilita setup local. |
+| **Firebase JWT (php-jwt)** | Biblioteca oficial e segura para autenticação via tokens JWT. |
+
+### 🎯 Motivações Técnicas
+
+- **Performance:** Hyperf utiliza corrotinas, garantindo throughput muito maior que FPM.
+- **Arquitetura limpa:** separação em camadas (Domain / Application / Infrastructure / Interface).
+- **Segurança:** middleware JWT protege rotas sensíveis.
+- **Observabilidade:** endpoint `/metrics` preparado para Prometheus.
+- **DX:** ambiente pronto com Docker + Mailhog.
 
 ---
 
@@ -37,7 +54,7 @@ APP_DEBUG=true
 SERVER_HOST=0.0.0.0
 SERVER_PORT=9501
 
-# Banco (se usar MySQL/Postgres, ajuste conforme seu docker-compose)
+# Banco (se usar MySQL, ajuste conforme seu docker-compose)
 DB_DRIVER=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -120,7 +137,7 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:9501/metrics
 ## 📈 Métricas
 
 ### Endpoint
-- **Rota:** `GET /metrics` (protegida por JWT, se você adicionou o middleware ao grupo de rotas)
+- **Rota:** `GET /metrics` (protegida por JWT)
 - **Formato:** texto/Prometheus exposition format (ou JSON, conforme seu `MetricsController`)
 
 ### cURL (com JWT)
@@ -139,7 +156,6 @@ scrape_configs:
       - targets: ['app:9501']
     bearer_token: "<token_jwt_sem_expiracao>"
 ```
-> Alternativas: liberar `/metrics` publicamente em dev ou injetar o token via relabel/config. Em produção, prefira autenticação (JWT, mTLS, sidecar).
 
 ---
 
